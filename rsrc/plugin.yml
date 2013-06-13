@@ -1,7 +1,8 @@
 name: Sprint
 main: com.Carbon131.Sprint.Sprint
-version: 1.3
-author: Carbon131
+version: 1.3z
+author: Carbon131,Zarius
+# small modifications by Zarius for BukkitR5+ compatibility
 commands:
   sprint:
     description: Modify sprint configuration settings.
