@@ -32,6 +32,8 @@ public class Sprint extends JavaPlugin
     public static int messagesinterval;
     public static String energygainedcolor;
     public static String energylostcolor;
+    public static long antiCheatExemptionTimeout;
+    public static boolean antiCheatSupport;
    
     File global;
     YamlConfiguration globalConfig;
@@ -71,6 +73,8 @@ public class Sprint extends JavaPlugin
     			globalConfig.set("messages.interval", 5);
     			globalConfig.set("messages.energy-gained-color", "§f");
     			globalConfig.set("messages.energy-lost-color", "§f");
+    			globalConfig.set("anticheat.support", true);
+                globalConfig.set("anticheat.exemption-timeout", 100);
     			globalConfig.save(global);
     		} catch (IOException ex){
     			System.out.println("[Sprint] could not generate "+filename+". Are the file permissions OK?");
@@ -103,6 +107,9 @@ public class Sprint extends JavaPlugin
     	messagesinterval = globalConfig.getInt("messages.interval", 5);
     	energygainedcolor = globalConfig.getString("messages.energy-gained-color", "f");
     	energylostcolor = globalConfig.getString("messages.energy-lost-color", "f");
+        antiCheatSupport = globalConfig.getBoolean("anticheat.support", true);
+        antiCheatExemptionTimeout = globalConfig.getLong("anticheat.exemption-timeout", 100);
+
     }
  
 	@Override
@@ -113,6 +120,8 @@ public class Sprint extends JavaPlugin
 		System.out.println("[" + pdfFile.getName() + "] v" + pdfFile.getVersion() + " is enabled!");
 		setup();
 		getCommand("sprint").setExecutor(new SprintCommands(this));
+        Dependencies.init();
+
 		try {
 			//checkVersion();
 		} catch (Exception e) {

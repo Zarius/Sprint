@@ -1,8 +1,12 @@
 name: Sprint
 main: com.Carbon131.Sprint.Sprint
-version: 1.3z
-author: Carbon131,Zarius
-# small modifications by Zarius for BukkitR5+ compatibility
+version: 1.31z
+author: Zarius
+authors: [Zarius,Carbon131]
+# small modifications by Zarius (March 2012) for BukkitR5+ compatibility
+# & now taken over development (June 2013)
+softdepend:
+  - AntiCheat
 commands:
   sprint:
     description: Modify sprint configuration settings.

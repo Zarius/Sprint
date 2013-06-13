@@ -1,5 +1,7 @@
 package com.Carbon131.Sprint;
 
+import net.h31ix.anticheat.api.AnticheatAPI;
+import net.h31ix.anticheat.manage.CheckType;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -14,6 +16,9 @@ import org.bukkit.util.Vector;
 
 public class SprintPlayerListener implements Listener
 {
+    private static boolean antiCheatExemption = false;
+    private static Integer cancelExemptionTask;
+    
 	public SprintPlayerListener(final Sprint plugin) {
 	}
 	
@@ -43,6 +48,7 @@ public class SprintPlayerListener implements Listener
  		} 
  		else
  		{
+            if (Sprint.antiCheatSupport && antiCheatExemption && cancelExemptionTask == null) unExemptAntiCheat(player);
  			if (Sprint.players.get(player) != null)
  			{
  				double currentenergy = Sprint.players.get(player).doubleValue();
@@ -96,11 +102,13 @@ public class SprintPlayerListener implements Listener
         {
         	if (Sprint.highjumpenabled == true && player.hasPermission("sprint.highjump"))
         	{
+                if (Sprint.antiCheatSupport) exemptAntiCheat(player, true);
         		Vector dir = player.getLocation().getDirection().multiply(Sprint.speed);
         		player.setVelocity(dir);
         	}
         	else
         	{
+        	    if (Sprint.antiCheatSupport) exemptAntiCheat(player, true);
         		Vector dir = player.getLocation().getDirection().multiply(Sprint.speed).setY(0);
         		player.setVelocity(dir);
         	}
@@ -113,6 +121,44 @@ public class SprintPlayerListener implements Listener
         {
         	player.sendMessage("�4Stamina: 0% - You Must Rest!");
         }
+    }
+
+	private void exemptAntiCheat(Player player, boolean exempt) {
+	    if (exempt) {
+            if (Dependencies.hasAntiCheat()) {
+                AnticheatAPI.exemptPlayer(player, CheckType.FLY);
+                AnticheatAPI.exemptPlayer(player, CheckType.SPEED);
+                AnticheatAPI.exemptPlayer(player, CheckType.SNEAK);
+                AnticheatAPI.exemptPlayer(player, CheckType.SPRINT);
+                antiCheatExemption = true;
+                if (cancelExemptionTask != null) { 
+                    Bukkit.getScheduler().cancelTask(cancelExemptionTask);
+                    cancelExemptionTask = null;
+                }
+            }
+	    } else {
+            if (Dependencies.hasAntiCheat()) {
+                AnticheatAPI.unexemptPlayer(player, CheckType.FLY);
+                AnticheatAPI.unexemptPlayer(player, CheckType.SPEED);
+                AnticheatAPI.unexemptPlayer(player, CheckType.SNEAK);
+                AnticheatAPI.unexemptPlayer(player, CheckType.SPRINT);
+            }	        
+	    }
+    }
+
+    /**
+     * @param player
+     */
+    private void unExemptAntiCheat(final Player player) {
+        antiCheatExemption = false;
+
+        cancelExemptionTask = Bukkit.getScheduler().scheduleSyncDelayedTask(Bukkit.getServer().getPluginManager().getPlugin("Sprint"), new Runnable() {
+            public void run() {
+                //System.out.print("Running 'unExemptAntiCheat' task!");
+
+                if (!player.isSneaking()) exemptAntiCheat(player, false);
+                cancelExemptionTask = null;
+            }}, Sprint.antiCheatExemptionTimeout);
     }
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
