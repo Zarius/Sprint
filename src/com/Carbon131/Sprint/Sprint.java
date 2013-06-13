@@ -61,12 +61,12 @@ public class Sprint extends JavaPlugin
     		try {
     			global.createNewFile();
     			System.out.println("[Sprint] Created an empty file " + getDataFolder() +"/"+filename+", please edit it!");
-    			globalConfig.set("options.speed", .6);
-    			globalConfig.set("options.energy-lost-per-second", 1);
+    			globalConfig.set("options.speed", 1);
+    			globalConfig.set("options.energy-lost-per-second", 8);
     			globalConfig.set("options.energy-gained-per-second", 1);
-    			globalConfig.set("options.high-jump-enabled", false);
+    			globalConfig.set("options.high-jump-enabled", true);
     			globalConfig.set("options.requires-command-enabled", false);
-    			globalConfig.set("requires-item.enabled", false);
+    			globalConfig.set("requires-item.enabled", true);
     			globalConfig.set("requires-item.item-id", 301);
     			globalConfig.set("held-item.enabled", false);
     			globalConfig.set("held-item.item-id", 0);
@@ -95,12 +95,12 @@ public class Sprint extends JavaPlugin
 			e.printStackTrace();
 		}
 
-    	speed = globalConfig.getDouble("options.speed", .6);
-    	energylostpersecond = globalConfig.getDouble("options.energy-lost-per-second", 1);
+    	speed = globalConfig.getDouble("options.speed", 1);
+    	energylostpersecond = globalConfig.getDouble("options.energy-lost-per-second", 8);
     	energygainedpersecond = globalConfig.getDouble("options.energy-gained-per-second", 1);
-    	highjumpenabled = globalConfig.getBoolean("options.high-jump-enabled", false);
+    	highjumpenabled = globalConfig.getBoolean("options.high-jump-enabled", true);
     	requirescommandenabled = globalConfig.getBoolean("options.requires-command-enabled", false);
-    	requiresitem = globalConfig.getBoolean("requires-item.enabled", false);
+    	requiresitem = globalConfig.getBoolean("requires-item.enabled", true);
     	itemid = globalConfig.getInt("requires-item.item-id", 301);
     	helditemenabled = globalConfig.getBoolean("held-item.enabled", false);
     	helditemid = globalConfig.getInt("held-item.item-id", 0);
