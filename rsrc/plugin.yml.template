@@ -1,8 +1,10 @@
 name: Sprint
 main: com.Carbon131.Sprint.Sprint
-version: 1.31z
+version: @build.major@.@build.minor@.@build.revision@
+builddate: @build.date-refer to version.properties for details@
 author: Zarius
 authors: [Zarius,Carbon131]
+website: http://dev.bukkit.org/server-mods/sprint/
 # small modifications by Zarius (March 2012) for BukkitR5+ compatibility
 # & now taken over development (June 2013)
 softdepend:
