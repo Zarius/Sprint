@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.Field;
 
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -103,7 +104,7 @@ public class Config {
                 } else if (fieldType.getName().equals("java.lang.Integer")) {
                     field.set(null, globalConfig.getInt(fieldName, (Integer)field.get(null)));                
                 } else if (fieldType.getName().equals("java.lang.String")) {
-                    field.set(null, globalConfig.getString(fieldName, (String)field.get(null)));
+                    field.set(null, ChatColor.translateAlternateColorCodes('&', globalConfig.getString(fieldName, (String)field.get(null))));
                 } else {
                     System.out.print("Unknown field type: "+fieldType.getName()+" for field: "+fieldName);
                 }
