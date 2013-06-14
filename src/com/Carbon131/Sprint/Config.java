@@ -100,7 +100,6 @@ public class Config {
         for (Field field : Settings.class.getFields()) {
             String fieldName = field.getName().replace('$', '.').replace('_', '-');
             Class fieldType = field.getType();
-            System.out.print("Type: "+fieldType.getName()+" field: "+fieldName);
             
             try {
                 if (fieldType.getName().equalsIgnoreCase("Boolean")) {
@@ -114,7 +113,7 @@ public class Config {
                 } else if (fieldType.getName().equals("java.lang.String")) {
                     field.set(null, ChatColor.translateAlternateColorCodes('&', globalConfig.getString(fieldName, (String)field.get(null))));
                 } else {
-                    System.out.print("Unknown field type: "+fieldType.getName()+" for field: "+fieldName);
+                    System.out.print("Sprint: Unknown field type: "+fieldType.getName()+" for field: "+fieldName);
                 }
             } catch (IllegalArgumentException e) {
                 // TODO Auto-generated catch block
