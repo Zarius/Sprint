@@ -27,6 +27,14 @@ public class Config {
         
         loadConfig(global, globalConfig);
         readConfig(globalConfig);
+        validateSettings();
+    }
+
+    private static void validateSettings() {
+        if (!(Settings.requires_item$item_slot.matches("(?i)(boots|chestplate|leggings|helmet|hand)"))) {
+            System.out.print("Sprint: Unknown item slot, options are: (boots|chestplate|leggings|helmet|hand).");
+        }
+        
     }
 
     /** Loops through "Settings" class fields and creates a new file with the values 

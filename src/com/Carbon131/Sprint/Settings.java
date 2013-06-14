@@ -23,8 +23,11 @@ public class Settings {
 
     public static boolean requires_item$enabled = true;
     public static Integer requires_item$item_id = 301;
-    
+    public static String  requires_item$item_slot = "boots";
+    public static String  requires_item$name_required = "";
+
     public static boolean held_item$enabled = false;
     public static Integer held_item$item_id = 0;
+    public static String  held_item$name_required = "";
 
 }

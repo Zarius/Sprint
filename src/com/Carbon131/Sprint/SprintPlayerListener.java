@@ -11,6 +11,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.util.Vector;
 
@@ -32,11 +33,25 @@ public class SprintPlayerListener implements Listener
  	 			if (Settings.requires_item$enabled == true)
  	 			{
  	 			    PlayerInventory inv = player.getInventory();
- 	                if ((inv.getBoots() != null && inv.getBoots().getTypeId() == Settings.requires_item$item_id)
- 	                       || (inv.getChestplate() != null && inv.getChestplate().getTypeId() == Settings.requires_item$item_id)
- 	                       || (inv.getLeggings() != null && inv.getLeggings().getTypeId() == Settings.requires_item$item_id)
- 	                       || (inv.getHelmet() != null && inv.getHelmet().getTypeId() == Settings.requires_item$item_id))
- 	                {
+ 	 			    ItemStack item = null;
+ 	 			    if (Settings.requires_item$item_slot.equalsIgnoreCase("boots") || Settings.requires_item$item_slot.isEmpty())
+ 	 			        item = inv.getBoots();
+ 	 			    else if (Settings.requires_item$item_slot.equalsIgnoreCase("chestplate"))
+ 	 			        item = inv.getChestplate();
+ 	 			    else if (Settings.requires_item$item_slot.equalsIgnoreCase("leggings"))
+ 	 			        item = inv.getLeggings();
+ 	 			    else if (Settings.requires_item$item_slot.equalsIgnoreCase("helmet"))
+ 	 			        item = inv.getHelmet();
+ 	 			    else if (Settings.requires_item$item_slot.equalsIgnoreCase("hand"))
+ 	 			        item = inv.getItemInHand();
+
+
+ 	                if (item != null && item.getTypeId() == Settings.requires_item$item_id) {
+ 	                    if (!Settings.requires_item$name_required.isEmpty()) {
+ 	                        if (item.getItemMeta() == null || !(Settings.requires_item$name_required.equals(item.getItemMeta().getDisplayName())) ) {
+ 	                            return; // didn't match the name
+ 	                        }
+ 	                    }
  	 	 				sprint(player);
  	                }
  	 			}
@@ -171,26 +186,22 @@ public class SprintPlayerListener implements Listener
  	 		{
  	 			if (Settings.held_item$enabled == true)
  	 			{
- 	 				if (player.getItemInHand().getTypeId() == Settings.held_item$item_id)
+ 	 			    ItemStack item = player.getItemInHand();
+ 	 				if (item.getTypeId() == Settings.held_item$item_id)
  	 				{
-	 	 				if (Sprint.status.get(player) != null)
-	 	 				{
-	 	 					if (Sprint.status.get(player).booleanValue() == true)
-	 	 					{
-	 	 						Sprint.status.put(player, false);
-	 	 						player.sendMessage(Settings.messages$sprint_disabled);
-	 	 					}
-	 	 					else
-	 	 					{
-	 	 						Sprint.status.put(player, true);
-	 	 						player.sendMessage(Settings.messages$sprint_enabled);
-	 	 					}
-	 	 				}
-	 	 				else
-	 	 				{
-	 	 					Sprint.status.put(player, true);
-                            player.sendMessage(Settings.messages$sprint_enabled);
-	 	 				}
+ 	 				    if (!Settings.held_item$name_required.isEmpty()) {
+                            if (item.getItemMeta() == null || !(Settings.requires_item$name_required.equals(item.getItemMeta().getDisplayName())) ) {
+                                return; // item name doesn't match, exit
+                            }
+ 	 				    }
+ 	 				    if (Sprint.status.get(player) == null || (Sprint.status.get(player).booleanValue() == true))	{
+ 	 				        Sprint.status.put(player, false);
+ 	 				        player.sendMessage(Settings.messages$sprint_disabled);
+ 	 				    } else {
+ 	 				        Sprint.status.put(player, true);
+ 	 				        player.sendMessage(Settings.messages$sprint_enabled);
+ 	 				    }
+
  	 				}
  	 			}
  	 		}
