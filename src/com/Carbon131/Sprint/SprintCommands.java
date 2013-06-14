@@ -46,11 +46,12 @@ public class SprintCommands implements CommandExecutor
     	    		{
         				if (args.length < 1)
         				{
-        					player.sendMessage("------------------�6[ �eSprint Commands �6]�f------------------");
-        					player.sendMessage("/sprint on �f: �3Enables sprinting.");
-        					player.sendMessage("/sprint off �f: �3Disables sprinting.");
+        					player.sendMessage("------------------§6[ §eSprint Commands §6]§f------------------");
+        					player.sendMessage("/sprint on §f: §3Enables sprinting (requires config setting to be enabled)");
+        					player.sendMessage("/sprint off §f: §3Disables sprinting (requires config setting to be enabled)");
         					player.sendMessage("");
-        					player.sendMessage("�4/sprint admin �f: �4Sprint Administration.");
+        					player.sendMessage("§4/sprint admin §f: §4Sprint Administration.");
+                            player.sendMessage("§4/sprint version §f: §4Show version information.");
         					return true;
         				}
 	    	    		if (Settings.options$requires_command_enabled == true)
@@ -69,46 +70,51 @@ public class SprintCommands implements CommandExecutor
     	    		}
 					else
 					{
-						sender.sendMessage("�cYou do not have access to that command.");
+						sender.sendMessage("§cYou do not have access to that command.");
 				    	return true;
 					}
     	    		if (player.hasPermission("sprint.admin"))
     	    		{
+    	    		    if (args[0].equalsIgnoreCase("version")) {
+                            player.sendMessage("       -----------§6[ §eSprint version " + parent.getDescription().getVersion() + " §6]§f-----------");
+    	    		        return true;
+    	    		    }
+
 /*	    				if (args[0].equalsIgnoreCase("admin"))
 	    				{
 	    					if (args.length < 2)
 	    					{
-		    					sender.sendMessage("-----------�6[ �eSprint Administration (Page 1/2) �6]�f-----------");
-		    					sender.sendMessage("/sprint speed �b<amount> �f: �3Change sprint speed.");
-		    					sender.sendMessage("/sprint energygainedpersecond �b<amount> �f: �3Change energy gained per second.");
-		    					sender.sendMessage("/sprint energylostpersecond �b<amount> �f: �3Change energy lost per second.");
-		    					sender.sendMessage("/sprint highjump �b<enable|disable> �f: �3Enable/disable sprint highjump.");
-		    					sender.sendMessage("/sprint requiresitem �b<enable|disable> �f: �3Enable/disable require item to wear.");
-		    					sender.sendMessage("/sprint requirescommand �b<enable|disable> �f: �3Enable/disable require command to enable/disable sprinting.");
+		    					sender.sendMessage("-----------§6[ §eSprint Administration (Page 1/2) §6]§f-----------");
+		    					sender.sendMessage("/sprint speed §b<amount> §f: §3Change sprint speed.");
+		    					sender.sendMessage("/sprint energygainedpersecond §b<amount> §f: §3Change energy gained per second.");
+		    					sender.sendMessage("/sprint energylostpersecond §b<amount> §f: §3Change energy lost per second.");
+		    					sender.sendMessage("/sprint highjump §b<enable|disable> §f: §3Enable/disable sprint highjump.");
+		    					sender.sendMessage("/sprint requiresitem §b<enable|disable> §f: §3Enable/disable require item to wear.");
+		    					sender.sendMessage("/sprint requirescommand §b<enable|disable> §f: §3Enable/disable require command to enable/disable sprinting.");
 			    	        	return true;
 	    					}
 	    					if (args.length > 0)
 	    					{
 	    	    				if (args[1].equals("1"))
 	    	    				{
-			    					sender.sendMessage("-----------�6[ �eSprint Administration (Page 1/2) �6]�f-----------");
-			    					sender.sendMessage("/sprint speed �b<amount> �f: �3Change sprint speed.");
-			    					sender.sendMessage("/sprint energygainedpersecond �b<amount> �f: �3Change energy gained per second.");
-			    					sender.sendMessage("/sprint energylostpersecond �b<amount> �f: �3Change energy lost per second.");
-			    					sender.sendMessage("/sprint highjump �b<enable|disable> �f: �3Enable/disable sprint highjump.");
-			    					sender.sendMessage("/sprint requiresitem �b<enable|disable> �f: �3Enable/disable require item to wear.");
-			    					sender.sendMessage("/sprint requirescommand �b<enable|disable> �f: �3Enable/disable require command to enable/disable sprinting.");
+			    					sender.sendMessage("-----------§6[ §eSprint Administration (Page 1/2) §6]§f-----------");
+			    					sender.sendMessage("/sprint speed §b<amount> §f: §3Change sprint speed.");
+			    					sender.sendMessage("/sprint energygainedpersecond §b<amount> §f: §3Change energy gained per second.");
+			    					sender.sendMessage("/sprint energylostpersecond §b<amount> §f: §3Change energy lost per second.");
+			    					sender.sendMessage("/sprint highjump §b<enable|disable> §f: §3Enable/disable sprint highjump.");
+			    					sender.sendMessage("/sprint requiresitem §b<enable|disable> §f: §3Enable/disable require item to wear.");
+			    					sender.sendMessage("/sprint requirescommand §b<enable|disable> §f: §3Enable/disable require command to enable/disable sprinting.");
 				    	        	return true;
 	    	    				}
 			    				else if (args[1].equals("2"))
 		    	    			{
-			    					sender.sendMessage("-----------�6[ �eSprint Administration (Page 2/2) �6]�f-----------");
-			    					sender.sendMessage("/sprint helditem �b<enable|disable> �f: �3Enable/disable being able to enable/disable sprint using an item.");
-			    					sender.sendMessage("/sprint helditemid �b<id> �f: �3Change the item that is used to enable/disable sprinting.");
-			    					sender.sendMessage("/sprint itemid �b<id> �f: �3Change the required item to be worn.");
-			    					sender.sendMessage("/sprint messagesinterval �b<seconds> �f: �3Change the interval between messages sent while sprinting.");
-			    					sender.sendMessage("/sprint energygainedcolor �b<color> �f: �3Change the color of the energy gained message.");
-			    					sender.sendMessage("/sprint energylostcolor �b<color> �f: �3Change the color of the energy lost message.");
+			    					sender.sendMessage("-----------§6[ §eSprint Administration (Page 2/2) §6]§f-----------");
+			    					sender.sendMessage("/sprint helditem §b<enable|disable> §f: §3Enable/disable being able to enable/disable sprint using an item.");
+			    					sender.sendMessage("/sprint helditemid §b<id> §f: §3Change the item that is used to enable/disable sprinting.");
+			    					sender.sendMessage("/sprint itemid §b<id> §f: §3Change the required item to be worn.");
+			    					sender.sendMessage("/sprint messagesinterval §b<seconds> §f: §3Change the interval between messages sent while sprinting.");
+			    					sender.sendMessage("/sprint energygainedcolor §b<color> §f: §3Change the color of the energy gained message.");
+			    					sender.sendMessage("/sprint energylostcolor §b<color> §f: §3Change the color of the energy lost message.");
 				    	        	return true;
 		    	    			}
 	    					}
@@ -118,7 +124,7 @@ public class SprintCommands implements CommandExecutor
 						{
 			    			if (args.length < 2)
 	    					{
-			    				sender.sendMessage("�4Usage: �6/sprint highjump <enable|disable>");
+			    				sender.sendMessage("§4Usage: §6/sprint highjump <enable|disable>");
 	    						return true;
 	    					}
 			    			if (args.length > 0)
@@ -145,7 +151,7 @@ public class SprintCommands implements CommandExecutor
 						{
 			    			if (args.length < 2)
 	    					{
-			    				sender.sendMessage("�4Usage: �6/sprint requiresitem <enable|disable>");
+			    				sender.sendMessage("§4Usage: §6/sprint requiresitem <enable|disable>");
 	    						return true;
 	    					}
 			    			if (args.length > 0)
@@ -172,7 +178,7 @@ public class SprintCommands implements CommandExecutor
 						{
 			    			if (args.length < 2)
 	    					{
-			    				sender.sendMessage("�4Usage: �6/sprint requirescommand <enable|disable>");
+			    				sender.sendMessage("§4Usage: §6/sprint requirescommand <enable|disable>");
 	    						return true;
 	    					}
 			    			if (args.length > 0)
@@ -199,7 +205,7 @@ public class SprintCommands implements CommandExecutor
 						{
 			    			if (args.length < 2)
 	    					{
-			    				sender.sendMessage("�4Usage: �6/sprint helditem <enable|disable>");
+			    				sender.sendMessage("§4Usage: §6/sprint helditem <enable|disable>");
 	    						return true;
 	    					}
 			    			if (args.length > 0)
@@ -265,7 +271,7 @@ public class SprintCommands implements CommandExecutor
     	    		} 
 					else
 					{
-						sender.sendMessage("�cYou do not have access to that command.");
+						sender.sendMessage("§cYou do not have access to that command.");
 			    		return true;
 					}
     		}
@@ -279,7 +285,7 @@ public class SprintCommands implements CommandExecutor
 		
 			
 		if (args.length < 2) {
-			sender.sendMessage("�4Usage: �6/sprint "+args[0].toLowerCase()+" <"+valueDefMsg+">");
+			sender.sendMessage("§4Usage: §6/sprint "+args[0].toLowerCase()+" <"+valueDefMsg+">");
 			return true;
 		} else {
 			if (valueType == "integer") {
