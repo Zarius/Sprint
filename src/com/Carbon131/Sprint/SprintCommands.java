@@ -1,12 +1,7 @@
 package com.Carbon131.Sprint;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -58,7 +53,7 @@ public class SprintCommands implements CommandExecutor
         					player.sendMessage("�4/sprint admin �f: �4Sprint Administration.");
         					return true;
         				}
-	    	    		if (Sprint.requirescommandenabled == true)
+	    	    		if (Settings.options$requires_command_enabled == true)
 	    				{
 	        				if (args[0].equalsIgnoreCase("on"))
 	        				{
@@ -280,7 +275,7 @@ public class SprintCommands implements CommandExecutor
     }
   
 	private boolean setConfigValues(CommandSender sender, String[] args, String keyName, String setMsg, String valueType, String valueDefMsg) throws FileNotFoundException, IOException, InvalidConfigurationException {
-		parent.globalConfig.load(parent.global);
+	    Config.globalConfig.load(Config.global);
 		
 			
 		if (args.length < 2) {
@@ -288,15 +283,15 @@ public class SprintCommands implements CommandExecutor
 			return true;
 		} else {
 			if (valueType == "integer") {
-				parent.globalConfig.set(keyName, new Integer(args[1]));
+			    Config.globalConfig.set(keyName, new Integer(args[1]));
 			} else if (valueType == "onoff") {
 				if ((!args[1].equals("on")) || (!args[1].equals("off"))) return false;
-				parent.globalConfig.set(keyName, (args[1].equals("on")?true:false));
+				Config.globalConfig.set(keyName, (args[1].equals("on")?true:false));
 			} else {
-				parent.globalConfig.set(keyName, args[1]);
+			    Config.globalConfig.set(keyName, args[1]);
 			}
 			
-			parent.globalConfig.save(parent.global);
+			Config.globalConfig.save(Config.global);
 			if (valueType == "onoff") {
 				sender.sendMessage(setMsg+(args[1] == "on" ? "enabled." : "disabled."));
 			} else {

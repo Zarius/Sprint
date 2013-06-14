@@ -29,13 +29,13 @@ public class SprintPlayerListener implements Listener
  		{
  	 		if (player.hasPermission("sprint.allow"))
  	 		{
- 	 			if (Sprint.requiresitem == true)
+ 	 			if (Settings.requires_item$enabled == true)
  	 			{
  	 			    PlayerInventory inv = player.getInventory();
- 	                if ((inv.getBoots() != null && inv.getBoots().getTypeId() == Sprint.itemid)
- 	                       || (inv.getChestplate() != null && inv.getChestplate().getTypeId() == Sprint.itemid)
- 	                       || (inv.getLeggings() != null && inv.getLeggings().getTypeId() == Sprint.itemid)
- 	                       || (inv.getHelmet() != null && inv.getHelmet().getTypeId() == Sprint.itemid))
+ 	                if ((inv.getBoots() != null && inv.getBoots().getTypeId() == Settings.requires_item$item_id)
+ 	                       || (inv.getChestplate() != null && inv.getChestplate().getTypeId() == Settings.requires_item$item_id)
+ 	                       || (inv.getLeggings() != null && inv.getLeggings().getTypeId() == Settings.requires_item$item_id)
+ 	                       || (inv.getHelmet() != null && inv.getHelmet().getTypeId() == Settings.requires_item$item_id))
  	                {
  	 	 				sprint(player);
  	                }
@@ -48,19 +48,19 @@ public class SprintPlayerListener implements Listener
  		} 
  		else
  		{
-            if (Sprint.antiCheatSupport && antiCheatExemption && cancelExemptionTask == null) unExemptAntiCheat(player);
+            if (Settings.anticheat$support && antiCheatExemption && cancelExemptionTask == null) unExemptAntiCheat(player);
  			if (Sprint.players.get(player) != null)
  			{
  				double currentenergy = Sprint.players.get(player).doubleValue();
  				double energy = addenergy(currentenergy);
  				Sprint.players.put(player, new Double(energy));
- 				if ((Math.floor((energy)*10)/10)%Sprint.messagesinterval == 0 && (Math.floor((energy)*10)/10) != 100  && Sprint.energylostpersecond != 0)
+ 				if ((Math.floor((energy)*10)/10)%Settings.messages$interval == 0 && (Math.floor((energy)*10)/10) != 100  && Settings.options$energy_lost_per_second != 0)
  				{
- 					player.sendMessage(Sprint.energygainedcolor + "Stamina: " + Math.floor(energy) + "%");
+ 					player.sendMessage(Settings.messages$stamina_gained.replaceAll("<energy>", String.valueOf(Math.floor(energy))));
  				}
- 				else if ((Math.floor((energy)*10)/10) == 99.9  && Sprint.energylostpersecond != 0)
+ 				else if ((Math.floor((energy)*10)/10) == 99.9  && Settings.options$energy_lost_per_second != 0)
  				{
- 					player.sendMessage(Sprint.energygainedcolor + "Stamina: 100%");
+ 					player.sendMessage(Settings.messages$stamina_full);
  				}
  			}
         }
@@ -75,11 +75,11 @@ public class SprintPlayerListener implements Listener
         { 	  
         	if (Sprint.players.get(player) != null)
         	{
-        		if ((Sprint.requirescommandenabled == true || Sprint.helditemenabled == true) && (Sprint.status.get(player) != null && Sprint.status.get(player).booleanValue() == true))
+        		if ((Settings.options$requires_command_enabled == true || Settings.held_item$enabled == true) && (Sprint.status.get(player) != null && Sprint.status.get(player).booleanValue() == true))
         		{
         			sprint2(player); 	  
         		}
-        		else if (Sprint.requirescommandenabled == false && Sprint.helditemenabled == false)
+        		else if (Settings.options$requires_command_enabled == false && Settings.held_item$enabled == false)
         		{
         			sprint2(player); 	  
         		}
@@ -100,26 +100,26 @@ public class SprintPlayerListener implements Listener
         Sprint.players.put(player, new Double(energy));
         if (energy > 0)
         {
-        	if (Sprint.highjumpenabled == true && player.hasPermission("sprint.highjump"))
+        	if (Settings.options$high_jump_enabled == true && player.hasPermission("sprint.highjump"))
         	{
-                if (Sprint.antiCheatSupport) exemptAntiCheat(player, true);
-        		Vector dir = player.getLocation().getDirection().multiply(Sprint.speed);
+                if (Settings.anticheat$support) exemptAntiCheat(player, true);
+        		Vector dir = player.getLocation().getDirection().multiply(Settings.options$speed);
         		player.setVelocity(dir);
         	}
         	else
         	{
-        	    if (Sprint.antiCheatSupport) exemptAntiCheat(player, true);
-        		Vector dir = player.getLocation().getDirection().multiply(Sprint.speed).setY(0);
+        	    if (Settings.anticheat$support) exemptAntiCheat(player, true);
+        		Vector dir = player.getLocation().getDirection().multiply(Settings.options$speed).setY(0);
         		player.setVelocity(dir);
         	}
-        	if (energy%Sprint.messagesinterval == 0 && Sprint.energylostpersecond != 0)
+        	if (energy%Settings.messages$interval == 0 && Settings.options$energy_lost_per_second != 0)
         	{
-        		player.sendMessage("�"+ Sprint.energylostcolor + "Stamina: " + energy + "%");
+        		player.sendMessage(Settings.messages$stamina_lost.replaceAll("<energy>", String.valueOf(energy)));
         	}
         }
         else
         {
-        	player.sendMessage("�4Stamina: 0% - You Must Rest!");
+        	player.sendMessage(Settings.messages$stamina_empty);
         }
     }
 
@@ -158,7 +158,7 @@ public class SprintPlayerListener implements Listener
 
                 if (!player.isSneaking()) exemptAntiCheat(player, false);
                 cancelExemptionTask = null;
-            }}, Sprint.antiCheatExemptionTimeout);
+            }}, Settings.anticheat$exemption_timeout);
     }
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
@@ -169,27 +169,27 @@ public class SprintPlayerListener implements Listener
  		{
  	 		if (player.hasPermission("sprint.allow"))
  	 		{
- 	 			if (Sprint.helditemenabled == true)
+ 	 			if (Settings.held_item$enabled == true)
  	 			{
- 	 				if (player.getItemInHand().getTypeId() == Sprint.helditemid)
+ 	 				if (player.getItemInHand().getTypeId() == Settings.held_item$item_id)
  	 				{
 	 	 				if (Sprint.status.get(player) != null)
 	 	 				{
 	 	 					if (Sprint.status.get(player).booleanValue() == true)
 	 	 					{
 	 	 						Sprint.status.put(player, false);
-	 	 						player.sendMessage("Sprinting disabled.");
+	 	 						player.sendMessage(Settings.messages$sprint_disabled);
 	 	 					}
 	 	 					else
 	 	 					{
 	 	 						Sprint.status.put(player, true);
-	 	 						player.sendMessage("Sprinting enabled.");
+	 	 						player.sendMessage(Settings.messages$sprint_enabled);
 	 	 					}
 	 	 				}
 	 	 				else
 	 	 				{
 	 	 					Sprint.status.put(player, true);
-	 	 					player.sendMessage("Sprinting enabled.");
+                            player.sendMessage(Settings.messages$sprint_enabled);
 	 	 				}
  	 				}
  	 			}
@@ -201,7 +201,7 @@ public class SprintPlayerListener implements Listener
  	{
  		if (currentenergy > 0)
  		{
- 			double newcurrentenergy = Math.floor((currentenergy - (Sprint.energylostpersecond*.1))*10)/10;
+ 			double newcurrentenergy = Math.floor((currentenergy - (Settings.options$energy_lost_per_second*.1))*10)/10;
  			return newcurrentenergy;
  		}
  		else
@@ -214,7 +214,7 @@ public class SprintPlayerListener implements Listener
  	{
  		if (currentenergy < 100)
  		{
- 			double newcurrentenergy = ((currentenergy + (Sprint.energygainedpersecond*.1))*10)/10;
+ 			double newcurrentenergy = ((currentenergy + (Settings.options$energy_gained_per_second*.1))*10)/10;
  			return newcurrentenergy;
  		}
  		else
