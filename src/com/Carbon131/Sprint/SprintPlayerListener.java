@@ -24,62 +24,71 @@ public class SprintPlayerListener implements Listener
 	}
 	
 	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    public void onPlayerInteract(PlayerInteractEvent event) {
+    	Player player = event.getPlayer();
+    	event.getAction();
+    	if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK)
+    	{
+     		if (player.hasPermission("sprint.allow"))
+     		{
+     			toggleSprint(player);
+     		}
+    	}
+    }
+
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
 	public void onPlayerMove(PlayerMoveEvent event) {
  		final Player player = event.getPlayer();
  		if (player.isSneaking())
  		{
- 	 		if (player.hasPermission("sprint.allow"))
- 	 		{
- 	 			if (Settings.requires_item$enabled == true)
- 	 			{
- 	 			    PlayerInventory inv = player.getInventory();
- 	 			    ItemStack item = null;
- 	 			    if (Settings.requires_item$item_slot.equalsIgnoreCase("boots") || Settings.requires_item$item_slot.isEmpty())
- 	 			        item = inv.getBoots();
- 	 			    else if (Settings.requires_item$item_slot.equalsIgnoreCase("chestplate"))
- 	 			        item = inv.getChestplate();
- 	 			    else if (Settings.requires_item$item_slot.equalsIgnoreCase("leggings"))
- 	 			        item = inv.getLeggings();
- 	 			    else if (Settings.requires_item$item_slot.equalsIgnoreCase("helmet"))
- 	 			        item = inv.getHelmet();
- 	 			    else if (Settings.requires_item$item_slot.equalsIgnoreCase("hand"))
- 	 			        item = inv.getItemInHand();
-
-
- 	                if (item != null && item.getTypeId() == Settings.requires_item$item_id) {
- 	                    if (!Settings.requires_item$name_required.isEmpty()) {
- 	                        if (item.getItemMeta() == null || !(Settings.requires_item$name_required.equals(item.getItemMeta().getDisplayName())) ) {
- 	                            return; // didn't match the name
- 	                        }
- 	                    }
- 	 	 				sprint(player);
- 	                }
- 	 			}
- 	 			else
- 	 			{
-	               	sprint(player);
- 	 			}
- 			}
+ 		    if (canSprint(player)) {
+ 		        sprint(player);
+ 		    }
  		} 
  		else
  		{
-            if (Settings.anticheat$support && antiCheatExemption && cancelExemptionTask == null) unExemptAntiCheat(player);
- 			if (Sprint.players.get(player) != null)
- 			{
- 				double currentenergy = Sprint.players.get(player).doubleValue();
- 				double energy = addenergy(currentenergy);
- 				Sprint.players.put(player, new Double(energy));
- 				if ((Math.floor((energy)*10)/10)%Settings.messages$interval == 0 && (Math.floor((energy)*10)/10) != 100  && Settings.options$energy_lost_per_second != 0)
- 				{
- 					player.sendMessage(Settings.messages$stamina_gained.replaceAll("<energy>", String.valueOf(Math.floor(energy))));
- 				}
- 				else if ((Math.floor((energy)*10)/10) == 99.9  && Settings.options$energy_lost_per_second != 0)
- 				{
- 					player.sendMessage(Settings.messages$stamina_full);
- 				}
- 			}
+            if (Settings.anticheat$support && antiCheatExemption && cancelExemptionTask == null) 
+                unExemptAntiCheat(player);
+ 			regainEnergy(player);
         }
  	}
+
+    private boolean canSprint(Player player) {
+        if (player.hasPermission("sprint.allow"))
+        {
+            if (Settings.requires_item$enabled == true)
+            {
+                PlayerInventory inv = player.getInventory();
+                ItemStack item = null;
+                if (Settings.requires_item$item_slot.equalsIgnoreCase("boots") || Settings.requires_item$item_slot.isEmpty())
+                    item = inv.getBoots();
+                else if (Settings.requires_item$item_slot.equalsIgnoreCase("chestplate"))
+                    item = inv.getChestplate();
+                else if (Settings.requires_item$item_slot.equalsIgnoreCase("leggings"))
+                    item = inv.getLeggings();
+                else if (Settings.requires_item$item_slot.equalsIgnoreCase("helmet"))
+                    item = inv.getHelmet();
+                else if (Settings.requires_item$item_slot.equalsIgnoreCase("hand"))
+                    item = inv.getItemInHand();
+
+
+                if (item != null && item.getTypeId() == Settings.requires_item$item_id) {
+                    if (!Settings.requires_item$name_required.isEmpty()) {
+                        if (item.getItemMeta() == null || !(Settings.requires_item$name_required.equals(item.getItemMeta().getDisplayName())) ) {
+                            return false; // didn't match the name, no sprinting
+                        }
+                    }
+                    return true;
+                }
+            }
+            else
+            {
+                // no item required, just sprint :)
+                return true;
+            }
+        }
+        return false;
+    }
 
     /**
      * @param player
@@ -138,7 +147,27 @@ public class SprintPlayerListener implements Listener
         }
     }
 
-	private void exemptAntiCheat(Player player, boolean exempt) {
+	/**
+     * @param player
+     */
+    private void regainEnergy(final Player player) {
+        if (Sprint.players.get(player) != null)
+        {
+        	double currentenergy = Sprint.players.get(player).doubleValue();
+        	double energy = addenergy(currentenergy);
+        	Sprint.players.put(player, new Double(energy));
+        	if ((Math.floor((energy)*10)/10)%Settings.messages$interval == 0 && (Math.floor((energy)*10)/10) != 100  && Settings.options$energy_lost_per_second != 0)
+        	{
+        		player.sendMessage(Settings.messages$stamina_gained.replaceAll("<energy>", String.valueOf(Math.floor(energy))));
+        	}
+        	else if ((Math.floor((energy)*10)/10) == 99.9  && Settings.options$energy_lost_per_second != 0)
+        	{
+        		player.sendMessage(Settings.messages$stamina_full);
+        	}
+        }
+    }
+
+    private void exemptAntiCheat(Player player, boolean exempt) {
 	    if (exempt) {
             if (Dependencies.hasAntiCheat()) {
                 AnticheatAPI.exemptPlayer(player, CheckType.FLY);
@@ -176,39 +205,33 @@ public class SprintPlayerListener implements Listener
             }}, Settings.anticheat$exemption_timeout);
     }
 
-    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
- 	public void onPlayerInteract(PlayerInteractEvent event) {
- 		Player player = event.getPlayer();
- 		event.getAction();
-		if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK)
- 		{
- 	 		if (player.hasPermission("sprint.allow"))
- 	 		{
- 	 			if (Settings.held_item$enabled == true)
- 	 			{
- 	 			    ItemStack item = player.getItemInHand();
- 	 				if (item.getTypeId() == Settings.held_item$item_id)
- 	 				{
- 	 				    if (!Settings.held_item$name_required.isEmpty()) {
-                            if (item.getItemMeta() == null || !(Settings.requires_item$name_required.equals(item.getItemMeta().getDisplayName())) ) {
-                                return; // item name doesn't match, exit
-                            }
- 	 				    }
- 	 				    if (Sprint.status.get(player) == null || (Sprint.status.get(player).booleanValue() == true))	{
- 	 				        Sprint.status.put(player, false);
- 	 				        player.sendMessage(Settings.messages$sprint_disabled);
- 	 				    } else {
- 	 				        Sprint.status.put(player, true);
- 	 				        player.sendMessage(Settings.messages$sprint_enabled);
- 	 				    }
+    /**
+     * @param player
+     */
+    private void toggleSprint(Player player) {
+        if (Settings.held_item$enabled == true)
+        {
+            ItemStack item = player.getItemInHand();
+        	if (item.getTypeId() == Settings.held_item$item_id)
+        	{
+        	    if (!Settings.held_item$name_required.isEmpty()) {
+                    if (item.getItemMeta() == null || !(Settings.requires_item$name_required.equals(item.getItemMeta().getDisplayName())) ) {
+                        return; // item name doesn't match, exit
+                    }
+        	    }
+        	    if (Sprint.status.get(player) == null || (Sprint.status.get(player).booleanValue() == true))	{
+        	        Sprint.status.put(player, false);
+        	        player.sendMessage(Settings.messages$sprint_disabled);
+        	    } else {
+        	        Sprint.status.put(player, true);
+        	        player.sendMessage(Settings.messages$sprint_enabled);
+        	    }
 
- 	 				}
- 	 			}
- 	 		}
- 		}
- 	}
+        	}
+        }
+    }
  	
- 	public double minusenergy(double currentenergy)
+ 	private double minusenergy(double currentenergy)
  	{
  		if (currentenergy > 0)
  		{
@@ -221,7 +244,7 @@ public class SprintPlayerListener implements Listener
  		}
  	}
  	
- 	public double addenergy(double currentenergy)
+ 	private double addenergy(double currentenergy)
  	{
  		if (currentenergy < 100)
  		{

@@ -112,6 +112,8 @@ public class Config {
                     field.set(null, globalConfig.getInt(fieldName, (Integer)field.get(null)));                
                 } else if (fieldType.getName().equals("java.lang.String")) {
                     field.set(null, ChatColor.translateAlternateColorCodes('&', globalConfig.getString(fieldName, (String)field.get(null))));
+                } else if (fieldType.getName().equals("java.util.List")) {
+                    field.set(null, globalConfig.getStringList(fieldName));
                 } else {
                     System.out.print("Sprint: Unknown field type: "+fieldType.getName()+" for field: "+fieldName);
                 }
