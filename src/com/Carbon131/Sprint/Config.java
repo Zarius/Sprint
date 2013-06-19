@@ -99,6 +99,7 @@ public class Config {
     private static void readConfig(YamlConfiguration globalConfig) {
         for (Field field : Settings.class.getFields()) {
             String fieldName = field.getName().replace('$', '.').replace('_', '-');
+            @SuppressWarnings("rawtypes")
             Class fieldType = field.getType();
             
             try {

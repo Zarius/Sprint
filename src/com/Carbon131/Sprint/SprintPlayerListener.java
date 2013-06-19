@@ -169,7 +169,7 @@ public class SprintPlayerListener implements Listener
 
     private void exemptAntiCheat(Player player, boolean exempt) {
 	    if (exempt) {
-            if (Dependencies.hasAntiCheat()) {
+            if (Sprint.dependencyMgr.hasAntiCheat()) {
                 AnticheatAPI.exemptPlayer(player, CheckType.FLY);
                 AnticheatAPI.exemptPlayer(player, CheckType.SPEED);
                 AnticheatAPI.exemptPlayer(player, CheckType.SNEAK);
@@ -181,7 +181,7 @@ public class SprintPlayerListener implements Listener
                 }
             }
 	    } else {
-            if (Dependencies.hasAntiCheat()) {
+            if (Sprint.dependencyMgr.hasAntiCheat()) {
                 AnticheatAPI.unexemptPlayer(player, CheckType.FLY);
                 AnticheatAPI.unexemptPlayer(player, CheckType.SPEED);
                 AnticheatAPI.unexemptPlayer(player, CheckType.SNEAK);

@@ -16,6 +16,8 @@
 
 package com.Carbon131.Sprint;
 
+import java.io.IOException;
+
 import net.h31ix.anticheat.Anticheat;
 
 import org.bukkit.Bukkit;
@@ -23,22 +25,31 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.permissions.Permissible;
 import org.bukkit.plugin.Plugin;
 
+import com.gmail.zariust.Sprint.metrics.Metrics;
+
 
 
 public class Dependencies {
+    private Plugin parent;
+
+
+    public Dependencies(Plugin plugin) {
+        this.parent = plugin;
+    }
+
     // Plugin Dependencies
-    private static Anticheat        antiCheat        = null;
-    private static String foundPlugins, notFoundPlugins;
+    private Anticheat        antiCheat        = null;
+    private String foundPlugins, notFoundPlugins;
+    private Metrics metrics = null;
 
-
-    public static void init() {
+    public void init() {
         try {
             foundPlugins = "";
             notFoundPlugins = ""; // need to reset variables to allow for
                                   // reloads
             
-//            if (!OtherDropsConfig.globalDisableMetrics)
-  //              enableMetrics();
+            if (Settings.enable_metrics)
+                enableMetrics();
 
             antiCheat = (Anticheat) getPlugin("AntiCheat");
            
@@ -56,7 +67,7 @@ public class Dependencies {
         }
     }
 
-    public static Plugin getPlugin(String name) {
+    public Plugin getPlugin(String name) {
         Plugin plugin = Bukkit.getServer().getPluginManager().getPlugin(name);
 
         if (plugin == null) {
@@ -74,7 +85,7 @@ public class Dependencies {
         return plugin;
     }
 
-    public static boolean hasPermission(Permissible who, String permission) {
+    public boolean hasPermission(Permissible who, String permission) {
         if (who instanceof ConsoleCommandSender)
             return true;
         boolean perm = who.hasPermission(permission);
@@ -88,22 +99,22 @@ public class Dependencies {
         return perm;
     }
 
-//
-//    public static void enableMetrics() {
-//        try {
-//            metrics = new Metrics(OtherDrops.plugin);
-//            metrics.start();
-//        } catch (IOException e) {
-//            // Failed to submit the stats :-(
-//        }
-//    }
-//
 
-    public static Anticheat getAntiCheat() {
+    public void enableMetrics() {
+        try {
+            metrics = new Metrics(this.parent);
+            metrics.start();
+        } catch (IOException e) {
+            // Failed to submit the stats :-(
+        }
+    }
+
+
+    public Anticheat getAntiCheat() {
         return antiCheat;
     }
 
-    public static boolean hasAntiCheat() {
+    public boolean hasAntiCheat() {
         return antiCheat != null;
     }
 }

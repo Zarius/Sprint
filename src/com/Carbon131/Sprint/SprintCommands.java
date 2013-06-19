@@ -1,12 +1,8 @@
 package com.Carbon131.Sprint;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
 
 public class SprintCommands implements CommandExecutor
@@ -280,7 +276,7 @@ public class SprintCommands implements CommandExecutor
         return false;
     }
   
-	private boolean setConfigValues(CommandSender sender, String[] args, String keyName, String setMsg, String valueType, String valueDefMsg) throws FileNotFoundException, IOException, InvalidConfigurationException {
+/*	private boolean setConfigValues(CommandSender sender, String[] args, String keyName, String setMsg, String valueType, String valueDefMsg) throws FileNotFoundException, IOException, InvalidConfigurationException {
 	    Config.globalConfig.load(Config.global);
 		
 			
@@ -314,5 +310,5 @@ public class SprintCommands implements CommandExecutor
     //	config.save();
     	sender.sendMessage(playerMsg);
     	return true;
-	}
+	}*/
     }

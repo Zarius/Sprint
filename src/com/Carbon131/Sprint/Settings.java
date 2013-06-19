@@ -29,5 +29,7 @@ public class Settings {
     public static boolean held_item$enabled = false;
     public static Integer held_item$item_id = 0;
     public static String  held_item$name_required = "";
+    
+    public static boolean enable_metrics = true;
 
 }
